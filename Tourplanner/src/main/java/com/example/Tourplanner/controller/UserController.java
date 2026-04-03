@@ -1,7 +1,7 @@
 package com.example.Tourplanner.controller;
 
-import com.example.Tourplanner.dto.UserRequestRegisterDTO;
-import com.example.Tourplanner.dto.UserResponseRegisterDTO;
+import com.example.Tourplanner.dto.UserRegisterRequestDTO;
+import com.example.Tourplanner.dto.UserRegisterResponseDTO;
 import com.example.Tourplanner.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +19,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseRegisterDTO> register(
-            @Valid @RequestBody UserRequestRegisterDTO dto) {
+    public ResponseEntity<UserRegisterResponseDTO> register(
+            @Valid @RequestBody UserRegisterRequestDTO dto) {
 
         userService.registerUser(dto);
 
-        // Response zurückgeben
-        UserResponseRegisterDTO response =
-                new UserResponseRegisterDTO(dto.username(), dto.email());
+        UserRegisterResponseDTO response =
+                new UserRegisterResponseDTO(dto.username(), dto.email());
 
         return ResponseEntity.ok(response);
     }
