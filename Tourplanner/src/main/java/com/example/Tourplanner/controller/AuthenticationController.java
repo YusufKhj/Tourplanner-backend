@@ -1,45 +1,48 @@
 package com.example.Tourplanner.controller;
 
 import com.example.Tourplanner.dto.UserLoginRequestDTO;
-import com.example.Tourplanner.utils.APIResponseUtil;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
+import com.example.Tourplanner.dto.UserLoginResponseDTO;
+import com.example.Tourplanner.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import com.example.Tourplanner.service.AuthenticationService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthenticationController {
 
-    private final AuthenticationService authservice;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login (@Valid @RequestBody UserLoginRequestDTO dto){
+    public ResponseEntity<?> login(@Valid @RequestBody UserLoginRequestDTO request) {
 
-        String token = authservice.loginUser(dto);
+        Optional<UserLoginResponseDTO> result = authenticationService.authenticate(request);
 
-        if (token == null) {
-            return APIResponseUtil.error("Invalid username or password", HttpStatus.UNAUTHORIZED);
+        if (result.isEmpty()) {
+            return ResponseEntity.status(401).body("Login failed");
         }
 
-        ResponseCookie cookie = ResponseCookie.from("jwt", token)
-                .httpOnly(true)
-                .secure(false) // true in production (HTTPS)
-                .path("/")
-                .maxAge(60 * 60) // 1 hour
-                .sameSite("Strict")
-                .build();
+        UserLoginResponseDTO user = result.get();
+
+        ResponseCookie cookie = buildCookie(user.token());
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(APIResponseUtil.success(token, "Login successful"));
+                .header("Set-Cookie", cookie.toString())
+                .body(user);
+    }
+
+    private ResponseCookie buildCookie(String token) {
+        return ResponseCookie.from("auth_token", token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(3600)
+                .build();
     }
 }

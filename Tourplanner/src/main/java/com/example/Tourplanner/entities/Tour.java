@@ -5,6 +5,9 @@ import java.util.UUID;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.util.Map;
 
 @Entity (name = "Tour")
@@ -55,7 +58,11 @@ public class Tour {
     @Column(
         nullable = false
     )  
-    private LocalDate estimatedTime;
+    private double estimatedTime;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private RouteInfo routeInfo;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
