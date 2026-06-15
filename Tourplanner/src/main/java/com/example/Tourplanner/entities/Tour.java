@@ -64,6 +64,15 @@ public class Tour {
     @Column(columnDefinition = "jsonb")
     private RouteInfo routeInfo;
 
+    @Column(nullable = true, length = 500)
+    private String imagePath;
+
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int popularity = 0;
+
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    private boolean childFriendly = false;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;

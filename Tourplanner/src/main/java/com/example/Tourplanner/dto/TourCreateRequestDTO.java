@@ -1,6 +1,6 @@
 package com.example.Tourplanner.dto;
 
-import com.example.Tourplanner.entities.RouteInfo;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,10 +10,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TourCreateRequestDTO {
 
+    @NotBlank(message = "Tour name is required")
     private String tourName;
+
+    @NotBlank(message = "Description is required")
     private String description;
+
+    @NotBlank(message = "Start location is required")
     private String start;
+
+    @NotBlank(message = "Finish location is required")
     private String finish;
+
+    @NotBlank(message = "Transport type is required")
     private String transportType;
-    private RouteInfo routeInfo; // distance und duration kommen von API
 }

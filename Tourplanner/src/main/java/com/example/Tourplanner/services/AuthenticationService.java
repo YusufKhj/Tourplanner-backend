@@ -1,4 +1,4 @@
-package com.example.Tourplanner.service;
+package com.example.Tourplanner.services;
 
 import com.example.Tourplanner.dto.UserLoginRequestDTO;
 import com.example.Tourplanner.dto.UserLoginResponseDTO;

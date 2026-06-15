@@ -1,8 +1,8 @@
-package com.example.Tourplanner.controller;
+package com.example.Tourplanner.controllers;
 
 import com.example.Tourplanner.dto.UserLoginRequestDTO;
 import com.example.Tourplanner.dto.UserLoginResponseDTO;
-import com.example.Tourplanner.service.AuthenticationService;
+import com.example.Tourplanner.services.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
